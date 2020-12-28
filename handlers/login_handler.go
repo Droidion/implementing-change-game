@@ -1,19 +1,19 @@
 package handlers
 
 import (
+	"github.com/Droidion/implementing-change-game/auth"
+	"github.com/Droidion/implementing-change-game/models"
 	"github.com/gofiber/fiber/v2"
-	"implementingChange/auth"
-	"implementingChange/models"
 )
 
-// LoginRequest contains request body for POST /login
+// loginRequest contains request body for POST /login
 type loginRequest struct {
 	Password string `json:"password" xml:"password" form:"password"`
 }
 
-// LoginResponse contains response body for POST /login
+// loginResponse contains response body for POST /login
 type loginResponse struct {
-	AccessToken string `json:"accessToken"`
+	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
 }
 
@@ -23,7 +23,7 @@ func LoginHandler(c *fiber.Ctx) error {
 
 	// Dummy user
 	var user = models.User{
-		Id:       1,
+		Id:       123,
 		Username: "username",
 		Password: "password",
 	}
@@ -40,7 +40,7 @@ func LoginHandler(c *fiber.Ctx) error {
 	}
 
 	// Create token
-	tokenDetails, err := auth.CreateToken(123)
+	tokenDetails, err := auth.CreateToken(user.Id)
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Could not create tokens")
 	}

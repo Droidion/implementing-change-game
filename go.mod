@@ -1,4 +1,4 @@
-module implementingChange
+module github.com/Droidion/implementing-change-game
 
 go 1.15
 
