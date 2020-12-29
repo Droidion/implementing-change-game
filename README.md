@@ -6,6 +6,8 @@ It's an API that can:
 - `POST /login` to get access and refresh tokens that are cached to Redis
 - `POST /v1/logout` to empty currently cached acceess token in Redis
 - `GET /v1/ping` is a dummy page that checks if the correct token is provided
+- Users are persisted in Postgres DB
+- Redis is used for caching tokens
 
 ## TODO
 - Persist users with Postgres
@@ -18,6 +20,8 @@ It's an API that can:
 
 - Have Go 1.15+ installed
 - Have Redis installed and running on local host without password
+- Have Postgres 12 installed and running
+- Apply DB migration SQL script from `migrations/migration.sql` using any Postgres query tool.
 - `$ go get`
 - `$ go run .`
 - API is available at `http://127.0.0.1:3000`

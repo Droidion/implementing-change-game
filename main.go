@@ -35,6 +35,8 @@ func main() {
 	if err := db.InitRedis(); err != nil {
 		log.Fatal(err)
 	}
+	db.PostgresConnect()
+	defer db.PgConn.Close()
 	app := fiber.New()
 	injectMiddleware(app)
 	assignRoutes(app)

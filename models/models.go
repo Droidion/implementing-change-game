@@ -2,7 +2,7 @@ package models
 
 type User struct {
 	Id       uint64 `json:"id"`
-	Username string `json:"username"`
+	Login    string `json:"login"`
 	Password string `json:"password"`
 }
 
@@ -17,5 +17,5 @@ type TokenDetails struct {
 
 type AccessDetails struct {
 	AccessUuid string
-	UserId   uint64
+	UserId     uint64
 }

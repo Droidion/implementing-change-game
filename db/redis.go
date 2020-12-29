@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var ctx = context.Background()
+var Ctx = context.Background()
 
 // Redis connection
 var Redis *redis.Client
@@ -31,7 +31,7 @@ func InitRedis() error {
 		DB:       0,  // use default DB
 	})
 
-	_, err := client.Ping(ctx).Result()
+	_, err := client.Ping(Ctx).Result()
 	if err != nil {
 		return eris.Wrap(err, "could not find non empty REDIS_DSN in environment variables")
 	}
@@ -44,7 +44,7 @@ func InitRedis() error {
 func SaveTokenToRedis(expires int64, uuid string, userId uint64) error {
 	utcTime := time.Unix(expires, 0)
 	now := time.Now()
-	err := Redis.Set(ctx, tokenKeyPredicate+uuid, strconv.Itoa(int(userId)), utcTime.Sub(now)).Err()
+	err := Redis.Set(Ctx, tokenKeyPredicate+uuid, strconv.Itoa(int(userId)), utcTime.Sub(now)).Err()
 	if err != nil {
 		return eris.Wrap(err, "could not save token to Redis")
 	}
@@ -53,7 +53,7 @@ func SaveTokenToRedis(expires int64, uuid string, userId uint64) error {
 
 // FetchAuth tries to get user id from cached token metadata
 func FetchAuth(authD *models.AccessDetails) (uint64, error) {
-	userid, err := Redis.Get(ctx, tokenKeyPredicate+authD.AccessUuid).Result()
+	userid, err := Redis.Get(Ctx, tokenKeyPredicate+authD.AccessUuid).Result()
 	if err != nil {
 		return 0, eris.Wrap(err, "could not find token in Redis")
 	}
@@ -68,7 +68,7 @@ func FetchAuth(authD *models.AccessDetails) (uint64, error) {
 
 // DeleteAuth tries to delete token in redis cache
 func DeleteAuth(givenUuid string) (int64, error) {
-	deleted, err := Redis.Del(ctx, tokenKeyPredicate+givenUuid).Result()
+	deleted, err := Redis.Del(Ctx, tokenKeyPredicate+givenUuid).Result()
 	if err != nil {
 		return 0, eris.Wrap(err, "could not find token to delete in Redis cache")
 	}

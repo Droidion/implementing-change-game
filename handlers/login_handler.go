@@ -2,12 +2,14 @@ package handlers
 
 import (
 	"github.com/Droidion/implementing-change-game/auth"
+	"github.com/Droidion/implementing-change-game/db"
 	"github.com/Droidion/implementing-change-game/models"
 	"github.com/gofiber/fiber/v2"
 )
 
 // loginRequest contains request body for POST /login
 type loginRequest struct {
+	Login    string `json:"login" xml:"login" form:"login"`
 	Password string `json:"password" xml:"password" form:"password"`
 }
 
@@ -21,22 +23,21 @@ type loginResponse struct {
 func LoginHandler(c *fiber.Ctx) error {
 	var err error
 
-	// Dummy user
-	var user = models.User{
-		Id:       123,
-		Username: "username",
-		Password: "password",
-	}
-
 	// Parse request body
 	requestBody := new(loginRequest)
-	if err := c.BodyParser(requestBody); err != nil {
+	if err = c.BodyParser(requestBody); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Incorrect request body")
 	}
 
-	// Check that password is correct (with dummy user)
-	if user.Password != requestBody.Password {
-		return fiber.NewError(fiber.StatusUnauthorized, "Could not recognize the requestBody")
+	var user *models.User
+	user, err = db.GetUserByLogin(requestBody.Login)
+	if err != nil {
+		return fiber.NewError(fiber.StatusUnauthorized, "Login not found")
+	}
+
+	_, err = auth.CompareHashAndPassword(user.Password, requestBody.Password)
+	if err != nil {
+		return fiber.NewError(fiber.StatusUnauthorized, "IncorrectPassword")
 	}
 
 	// Create token
