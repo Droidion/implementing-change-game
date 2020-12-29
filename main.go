@@ -8,16 +8,18 @@ import (
 	"log"
 )
 
+const apiVer = "/v1"
+
 // injectMiddleware assigns middleware handlers to certain paths
 func injectMiddleware(app *fiber.App) {
-	app.Use("/v1", handlers.CheckAuthMiddleware)
+	app.Use(apiVer, handlers.CheckAuthMiddleware)
 }
 
 // assignRoutes maps web server routes to the handler functions
 func assignRoutes(app *fiber.App) {
 	app.Post("/login", handlers.LoginHandler)
-	app.Get("/v1/ping", handlers.PingHandler)
-	app.Post("/v1/logout", handlers.LogoutHandler)
+	app.Get(apiVer+"/ping", handlers.PingHandler)
+	app.Post(apiVer+"/logout", handlers.LogoutHandler)
 }
 
 // loadEnv loads environment variables from .env file
