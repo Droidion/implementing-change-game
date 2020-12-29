@@ -22,6 +22,13 @@ It's an API that can:
 - Have Redis installed and running on local host without password
 - Have Postgres 12 installed and running
 - Apply DB migration SQL script from `migrations/migration.sql` using any Postgres query tool.
+- Have `.env` with the following parameters (set appropriate values if needed):
+```
+ACCESS_SECRET=notsosecret
+REFRESH_SECRET=alsonotverysecret
+REDIS_DSN=localhost:6379
+POSTGRES_URL=postgresql://localhost:5432/change
+```  
 - `$ go get`
 - `$ go run .`
 - API is available at `http://127.0.0.1:3000`
